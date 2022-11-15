@@ -1,0 +1,18 @@
+<div class="create-denuncia-container">
+    <form [formGroup]="createdenunciaForm" (ngSubmit)="onSubmit()" style="padding-bottom: 20px; width: 450px;" class="create-denuncia" [style]="clickCreatedenuncia ? 'margin-left: 0vw' : ''">
+        <span class="create-denuncia-header">Create denuncia</span>
+            <label style=" margin-bottom: 20px;">Title:<input formControlName="title" [ngClass]="{ 'is-invalid': submitted && createdenunciaForm.controls.title.errors }" [style]="submitted && createdenunciaForm.controls.title.errors ? 'outline: 1px solid #b30000;' : ''" type="text" placeholder="Title" ></label>
+            <div *ngIf="submitted && createdenunciaForm.controls.title.errors" class="validation-error">               
+                <div *ngIf="createdenunciaForm.controls.title.errors.required">Is required</div>
+            </div>
+            <label style=" margin-bottom: 20px;">Description:<input formControlName="description" [ngClass]="{ 'is-invalid': submitted && createdenunciaForm.controls.description.errors }" [style]="submitted && createdenunciaForm.controls.description.errors ? 'outline: 1px solid #b30000;' : ''" type="text" placeholder="Description" ></label>
+            <div *ngIf="submitted && createdenunciaForm.controls.description.errors" class="validation-error">               
+                <div *ngIf="createdenunciaForm.controls.description.errors.required">Is required</div>
+            </div>
+        <div style="width: 62%; display: inline-flex; justify-content: center; margin-bottom: 20px;">
+        <div style="margin-right: 4%; display: flex; flex-direction: column; width: 62%;">
+        </div>
+		</div>
+        <button class="create-denuncia-button" (click)="sendCreatedenuncia()"><b>Crear denunciao</b></button>
+    </form>
+</div>
