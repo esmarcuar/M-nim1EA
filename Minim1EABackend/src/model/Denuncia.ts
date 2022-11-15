@@ -9,7 +9,7 @@ const Denuncia = new Schema({
         type: Schema.Types.ObjectId,
         ref: "User"
     },
-    denunciado: [{
+    denunciados: [{
         type: Schema.Types.ObjectId,
         ref: "User"
         

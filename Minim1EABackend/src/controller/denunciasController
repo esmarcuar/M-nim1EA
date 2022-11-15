@@ -1,0 +1,113 @@
+import Denuncia from '../model/Denuncia';
+import Comment from '../model/Comment';
+
+import { Request, Response } from 'express';
+
+const getall = async (req: Request, res: Response) => {
+    const denuncia = await Denuncia.find().populate('owner').populate('comments');
+    res.json(denuncia);
+}
+
+const getone = async (req: Request, res: Response) => {
+    const denuncia = await Denuncia.findById(req.params.id_event).populate('owner').populate('comments');
+    if (!denuncia) {
+        return res.status(404).send('Denuncia does not exist');
+    }
+    res.json(denuncia);
+}
+
+const setone = async (req: Request, res: Response) => {
+    const denuncia = new Denuncia(req.body);
+    await denuncia.save( (err: any) => {
+        if (err) {
+            return res.status(500).send(err);
+        }
+        res.status(200).json({ status: 'Denuncia saved' });
+    });
+}
+
+const deleteDenuncia = async (req: Request, res: Response) => {
+    try {
+		const user = await Denuncia.findOneAndDelete({ id: req.params.id}).catch(Error);
+		res.status(200).json({ status: 'Denuncia deleted' });
+	}
+	catch (error) {
+		res.status(500).json({message: 'Denuncia not found', error });
+	}
+}
+
+const addComment = async (req: Request, res: Response) => {
+    const denuncia = await Denuncia.findById(req.params.id_event);
+    if (!denuncia) {
+        return res.status(404).send('Denuncia does not exist');
+    }
+    const comment = new Comment(req.body);
+    await comment.save( (err: any) => {
+        if (err) {
+            return res.status(500).send(err);
+        }
+        denuncia.save();
+        res.status(200).json({ status: 'Comment saved' });
+    });
+}
+
+
+const getComments = async (req: Request, res: Response) => {
+    const denuncia = await Denuncia.findById(req.params.id_event).populate('comments');
+    if (!denuncia) {
+        return res.status(404).send('Denuncia does not exist');
+    }
+    res.json(denuncia.comments);
+}
+
+const getComment = async (req: Request, res: Response) => {
+    const denuncia = await Denuncia.findById(req.params.id_event).populate('comments');
+    if (!denuncia) {
+        return res.status(404).send('Denuncia does not exist');
+    }
+    const comment = await Comment.findById(req.params.id_comment);
+    if (!comment) {
+        return res.status(404).send('The comment does not exist');
+    }
+    res.json(comment);
+}
+
+
+const deleteComment = async (req: Request, res: Response) => {
+    const denuncia = await Denuncia.findById(req.params.id_event);
+    if (!denuncia) {
+        return res.status(404).send('Denuncia does not exist');
+    }
+    const comment = await Comment.findById(req.params.id_comment);
+    if (!comment) {
+        return res.status(404).send('The comment does not exist');
+    }
+    await Comment.findByIdAndDelete(req.params.id_comment, (err: any) => {
+        if (err) {
+            return res.status(500).send(err);
+        }
+    
+        denuncia.save();
+        res.status(200).json({ status: 'Comment deleted' });
+    });
+}
+const addDenuncia = async (req: Request, res: Response) => {
+    const denuncia = new Denuncia(req.body);
+    await denuncia.save( (err: any) => {
+        if (err) {
+            return res.status(500).send(err);
+        }
+    });
+};
+
+export default {
+    getall,
+    getone,
+    setone,
+    deleteDenuncia: deleteDenuncia,
+    addComment,
+    getComments,
+    getComment,
+    deleteComment,
+    addDenuncia: addDenuncia
+}
