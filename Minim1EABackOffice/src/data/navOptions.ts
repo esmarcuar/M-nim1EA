@@ -30,6 +30,13 @@ const navOptions = [
         auth: unAuth()
     },
     {
+        name: 'Show Denuncias',
+        path: '/denuncia-screen',
+        icon: '../assets/EventArrow.png',
+        exact: true,
+        auth: unAuth()
+    },
+    {
         name: 'User List',
         path: '/userlist',
         icon: '../assets/User.png',
